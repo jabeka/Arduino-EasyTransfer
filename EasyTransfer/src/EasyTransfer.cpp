@@ -20,8 +20,8 @@ void EasyTransfer::sendData()
   CS ^= (0xFF00 & size) >> 8;
   _stream->write(0x06);
   _stream->write(0x85);
-  _stream->write((size & 0xFF00) >> 8);
   _stream->write(size & 0x00FF);
+  _stream->write((size & 0xFF00) >> 8);
   for (int i = 0; i < size; i++)
   {
     CS ^= *(address + i);
@@ -51,7 +51,7 @@ boolean EasyTransfer::receiveData()
       {
         auto len1 = _stream->read();
         auto len2 = _stream->read();
-        rx_len = len1 << 8 | len2;
+        rx_len = len2 << 8 | len1;
         // make sure the binary structs on both Arduinos are the same size.
         if (rx_len != size)
         {
